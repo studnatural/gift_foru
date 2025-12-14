@@ -45,7 +45,7 @@
 
 <h1>🎲 Try Your Luck! Suresh 🎉</h1>
 
-<button id="spinBtn">Try Your Luck</button>
+<button id="spinBtn">Try Now</button>
 
 <div id="message"></div>
 
@@ -53,21 +53,27 @@
   const spinBtn = document.getElementById('spinBtn');
   const messageDiv = document.getElementById('message');
 
-  // Funny messages sequence
+  // Funny multi-line messages
   const messages = [
-    "Better luck next year! 🤣",
-    "Congratulations, you won nothing! 😜",
-    "Your luck is buffering… please wait sir!! ⏳🤣",
+    "Better luck next year! 🤣<br>Don't give up!",
+    "Congratulations, you won nothing! 😜<br>Try again maybe?",
+    "Your luck is buffering… please wait ⏳🤣<br>Patience is key!",
     "🎉 ALERT! The universe has decided a suspense amount will zap into your mobile number ending with x080 by the end of the day! Hope so,<br> Regards,<br> Mohammed Suhail😜⚡🎁🎁"
   ];
 
   let attempt = 0;
 
   function showMessage() {
-    messageDiv.textContent = messages[attempt];
-    
+    messageDiv.innerHTML = messages[attempt];
+
     attempt++;
-    if (attempt >= messages.length) {
+
+    // Change button text dynamically
+    if (attempt === 1) {
+      spinBtn.textContent = "Try Again";
+    } else if (attempt === 2) {
+      spinBtn.textContent = "Try Again";
+    } else if (attempt >= messages.length) {
       spinBtn.style.display = 'none'; // Hide button after last message
     }
   }
@@ -79,4 +85,3 @@
 
 </body>
 </html>
-
