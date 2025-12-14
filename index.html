@@ -4,35 +4,40 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>🎲 Try Your Luck - Gift Game 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
 <style>
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Luckiest Guy', cursive;
     text-align: center;
     background: #fff8dc;
-    padding: 2rem;
+    padding: 3rem 1rem;
     color: #444;
   }
   h1 {
-    color: #d2691e;
+    color: #ff4500;
+    font-size: 3rem;
+    margin-bottom: 2rem;
   }
   #message {
-    font-size: 1.6rem;
-    margin: 2rem 0;
-    min-height: 4rem;
+    font-size: 2rem;
+    margin: 3rem 0;
+    min-height: 6rem;
+    line-height: 1.5;
   }
   button {
-    background-color: #d2691e;
+    background-color: #ff6347;
     border: none;
     color: white;
-    padding: 1rem 2.5rem;
-    font-size: 1.3rem;
-    border-radius: 10px;
+    padding: 1.2rem 3rem;
+    font-size: 1.5rem;
+    border-radius: 15px;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: background-color 0.3s;
+    margin-top: 2rem;
+    transition: background-color 0.3s, transform 0.2s;
   }
   button:hover {
-    background-color: #a0522d;
+    background-color: #ff4500;
+    transform: scale(1.05);
   }
 </style>
 </head>
@@ -48,12 +53,12 @@
   const spinBtn = document.getElementById('spinBtn');
   const messageDiv = document.getElementById('message');
 
-  // Messages sequence
+  // Funny messages sequence
   const messages = [
-    "Better luck next year!🤫",
+    "Better luck next year! 🤣",
     "Congratulations, you won nothing! 😜",
-    "Your luck is buffering… please wait ⏳😜",
-    "🎉 ALERT! The universe has decided a suspense amount will zap into your mobile number ending with x080 by the end of the day! Hope so 😜⚡🎁🎁"
+    "Your luck is buffering… please wait ⏳🤣",
+    "🎉 ALERT! The universe has decided a suspense amount will zap into your mobile number ending with x080 by the end of the day! Hope so, Regards Mohammed Suhail😜⚡🎁🎁"
   ];
 
   let attempt = 0;
