@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🎲 Try Your Luck - Gift Game 🎁</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background: #fff8dc;
+    padding: 2rem;
+    color: #444;
+  }
+  h1 {
+    color: #d2691e;
+  }
+  #message {
+    font-size: 1.6rem;
+    margin: 2rem 0;
+    min-height: 4rem;
+  }
+  button {
+    background-color: #d2691e;
+    border: none;
+    color: white;
+    padding: 1rem 2.5rem;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #a0522d;
+  }
+</style>
+</head>
+<body>
+
+<h1>🎲 Try Your Luck! 🎉</h1>
+
+<button id="spinBtn">Try Your Luck</button>
+
+<div id="message"></div>
+
+<script>
+  const spinBtn = document.getElementById('spinBtn');
+  const messageDiv = document.getElementById('message');
+
+  // Messages sequence
+  const messages = [
+    "Better luck next year!🤫",
+    "Congratulations, you won nothing! 😜",
+    "Your luck is buffering… please wait ⏳😜",
+    "🎉 ALERT! The universe has decided a suspense amount will zap into your mobile number ending with x080 by the end of the day! Hope so 😜⚡🎁🎁"
+  ];
+
+  let attempt = 0;
+
+  function showMessage() {
+    messageDiv.textContent = messages[attempt];
+    
+    attempt++;
+    if (attempt >= messages.length) {
+      spinBtn.style.display = 'none'; // Hide button after last message
+    }
+  }
+
+  spinBtn.addEventListener('click', () => {
+    showMessage();
+  });
+</script>
+
+</body>
+</html>
