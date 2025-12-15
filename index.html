@@ -3,85 +3,456 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>🎲 Try Your Luck - Gift Game 🎁</title>
-<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+<title>🎄 Secret Santa Mystery Gift 🎁</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Luckiest Guy', cursive;
-    text-align: center;
-    background: #fff8dc;
-    padding: 3rem 1rem;
-    color: #444;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+.container {
+  background: white;
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+h1 {
+  font-family: 'Luckiest Guy', cursive;
+  color: #ff4500;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+#stage {
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Spinning Wheel */
+.wheel-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 2rem auto;
+}
+
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 8px solid #333;
+  position: relative;
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  background: conic-gradient(
+    from 0deg,
+    #ff6b6b 0deg 72deg,
+    #4ecdc4 72deg 144deg,
+    #ffe66d 144deg 216deg,
+    #a8e6cf 216deg 288deg,
+    #ff8b94 288deg 360deg
+  );
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 30px solid #ff4500;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Scratch Card */
+.scratch-container {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  margin: 2rem auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#scratchCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
+  border-radius: 15px;
+}
+
+.scratch-result {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+  color: white;
+}
+
+/* Gift Boxes */
+.boxes-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.gift-box {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.gift-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.gift-box.opened {
+  animation: boxOpen 0.5s ease;
+  pointer-events: none;
+}
+
+@keyframes boxOpen {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Message Display */
+.message {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: #333;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 15px;
+  border-left: 5px solid #ff4500;
+}
+
+.final-message {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4500;
+  animation: celebration 1s ease;
+}
+
+@keyframes celebration {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Button Styles */
+.btn {
+  background: linear-gradient(135deg, #ff6b6b, #ff4500);
+  border: none;
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+  font-family: 'Luckiest Guy', cursive;
+  letter-spacing: 1px;
+  margin-top: 1rem;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 69, 0, 0.6);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: #ff4500;
+  position: absolute;
+  animation: confetti-fall 3s linear;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
   }
-  h1 {
-    color: #ff4500;
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  #message {
-    font-size: 2rem;
-    margin: 3rem 0;
-    min-height: 6rem;
-    line-height: 1.5;
-  }
-  button {
-    background-color: #ff6347;
-    border: none;
-    color: white;
-    padding: 1.2rem 3rem;
-    font-size: 1.5rem;
-    border-radius: 15px;
-    cursor: pointer;
-    margin-top: 2rem;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  button:hover {
-    background-color: #ff4500;
-    transform: scale(1.05);
-  }
+}
+
+.instruction {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
-
-<h1>🎲 Try Your Luck! Suresh 🎉</h1>
-
-<button id="spinBtn">Try Now</button>
-
-<div id="message"></div>
+<div class="container">
+  <h1>🎄 Secret Santa 🎁</h1>
+  <p class="subtitle">Hey Suresh! Your mystery gift awaits...</p>
+  
+  <div id="stage">
+    <div class="message">
+      Welcome to your Secret Santa surprise! Complete 3 fun challenges to reveal your gift. Ready?
+    </div>
+    <button class="btn" id="startBtn">Start Adventure!</button>
+  </div>
+</div>
 
 <script>
+const stage = document.getElementById('stage');
+const startBtn = document.getElementById('startBtn');
+
+let currentStage = 0;
+
+const stages = [
+  spinWheel,
+  scratchCard,
+  pickBox
+];
+
+startBtn.addEventListener('click', () => {
+  stages[currentStage]();
+});
+
+// STAGE 1: Spinning Wheel
+function spinWheel() {
+  stage.innerHTML = `
+    <div class="message">🎡 Challenge 1: Spin the Wheel of Fortune!</div>
+    <div class="wheel-container">
+      <div class="wheel-pointer"></div>
+      <div class="wheel" id="wheel"></div>
+    </div>
+    <button class="btn" id="spinBtn">SPIN!</button>
+  `;
+
+  const wheel = document.getElementById('wheel');
   const spinBtn = document.getElementById('spinBtn');
-  const messageDiv = document.getElementById('message');
+  
+  spinBtn.addEventListener('click', () => {
+    spinBtn.disabled = true;
+    const randomDeg = 1440 + Math.floor(Math.random() * 360);
+    wheel.style.transform = `rotate(${randomDeg}deg)`;
+    
+    setTimeout(() => {
+      stage.innerHTML = `
+        <div class="message">
+          🎊 Nice spin! You landed on the "Almost There" section!<br>
+          Let's see if your luck improves...
+        </div>
+        <button class="btn" id="nextBtn">Next Challenge</button>
+      `;
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        currentStage++;
+        stages[currentStage]();
+      });
+    }, 4200);
+  });
+}
 
-  // Funny multi-line messages
-  const messages = [
-    "Better luck next year! 🤣<br>Don't give up!",
-    "Congratulations, you won nothing! 😜<br>Try again maybe?",
-    "Your luck is buffering… please wait ⏳🤣<br>Patience is key!",
-    "🎉 ALERT! The universe has decided a suspense amount will zap into your mobile number ending with x080 by the end of the day! Hope so,<br> Regards,<br> Mohammed Suhail😜⚡🎁🎁"
-  ];
+// STAGE 2: Scratch Card
+function scratchCard() {
+  stage.innerHTML = `
+    <div class="message">🎫 Challenge 2: Scratch to Reveal!</div>
+    <div class="scratch-container">
+      <canvas id="scratchCanvas" width="300" height="200"></canvas>
+      <div class="scratch-result">🤔 Keep trying...<br>You're getting closer!</div>
+    </div>
+    <div class="instruction">Scratch with your finger or mouse</div>
+  `;
 
-  let attempt = 0;
-
-  function showMessage() {
-    messageDiv.innerHTML = messages[attempt];
-
-    attempt++;
-
-    // Change button text dynamically
-    if (attempt === 1) {
-      spinBtn.textContent = "Try Again";
-    } else if (attempt === 2) {
-      spinBtn.textContent = "Try Again";
-    } else if (attempt >= messages.length) {
-      spinBtn.style.display = 'none'; // Hide button after last message
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Create scratch surface
+  ctx.fillStyle = '#999';
+  ctx.fillRect(0, 0, 300, 200);
+  ctx.font = 'bold 24px Arial';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.fillText('SCRATCH HERE', 150, 100);
+  ctx.fillText('💎💎💎', 150, 140);
+  
+  let isDrawing = false;
+  let scratchedPercent = 0;
+  
+  function scratch(x, y) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+    
+    scratchedPercent++;
+    if (scratchedPercent > 100) {
+      setTimeout(() => {
+        stage.innerHTML = `
+          <div class="message">
+            😅 Oops! Not quite the jackpot...<br>
+            But wait, there's one more chance!
+          </div>
+          <button class="btn" id="nextBtn">Final Challenge</button>
+        `;
+        document.getElementById('nextBtn').addEventListener('click', () => {
+          currentStage++;
+          stages[currentStage]();
+        });
+      }, 500);
     }
   }
-
-  spinBtn.addEventListener('click', () => {
-    showMessage();
+  
+  canvas.addEventListener('mousedown', () => isDrawing = true);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mousemove', (e) => {
+    if (isDrawing) {
+      const rect = canvas.getBoundingClientRect();
+      scratch(e.clientX - rect.left, e.clientY - rect.top);
+    }
   });
-</script>
+  
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isDrawing = true;
+  });
+  canvas.addEventListener('touchend', () => isDrawing = false);
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (isDrawing) {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+    }
+  });
+}
 
+// STAGE 3: Pick a Box
+function pickBox() {
+  stage.innerHTML = `
+    <div class="message">🎁 Final Challenge: Pick Your Lucky Box!</div>
+    <div class="boxes-container" id="boxesContainer"></div>
+    <div class="instruction">Choose wisely... or not! 😉</div>
+  `;
+
+  const container = document.getElementById('boxesContainer');
+  const winningBox = Math.floor(Math.random() * 9);
+  
+  for (let i = 0; i < 9; i++) {
+    const box = document.createElement('div');
+    box.className = 'gift-box';
+    box.textContent = '🎁';
+    box.addEventListener('click', () => {
+      box.classList.add('opened');
+      
+      if (i === winningBox) {
+        box.textContent = '🎉';
+        setTimeout(() => {
+          revealFinalMessage();
+          createConfetti();
+        }, 500);
+      } else {
+        box.textContent = '😅';
+        setTimeout(() => {
+          stage.innerHTML = `
+            <div class="message">
+              So close! Try another box...
+            </div>
+            <button class="btn" id="tryAgain">Pick Again</button>
+          `;
+          document.getElementById('tryAgain').addEventListener('click', pickBox);
+        }, 800);
+      }
+    });
+    container.appendChild(box);
+  }
+}
+
+// Final Reveal
+function revealFinalMessage() {
+  stage.innerHTML = `
+    <div class="final-message">
+      🎊 CONGRATULATIONS! 🎊<br><br>
+      A surprise amount will magically appear in your account on a mobile no. ending with x080 by end of the day!<br><br>
+      Hope you enjoyed the adventure! 🎁✨<br><br>
+      <small style="font-size:1rem; color:#666;">- Your Secret Santa, Mohammed Suhail 😄</small>
+    </div>
+  `;
+}
+
+// Confetti Effect
+function createConfetti() {
+  const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a8e6cf', '#ff8b94'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDelay = Math.random() + 's';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 3000);
+    }, i * 30);
+  }
+}
+</script>
 </body>
 </html>
