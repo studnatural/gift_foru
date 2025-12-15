@@ -400,17 +400,25 @@ function pickBox() {
     const box = document.createElement('div');
     box.className = 'gift-box';
     box.textContent = '🎁';
-    box.addEventListener('click', () => {
-      box.classList.add('opened');
+    
+    box.addEventListener('click', function(e) {
+      const clickedBox = e.currentTarget;
+      const boxIndex = parseInt(clickedBox.dataset.index);
       
-      if (i === winningBox) {
-        box.textContent = '🎉';
+      // Prevent clicking multiple boxes
+      const allBoxes = document.querySelectorAll('.gift-box');
+      allBoxes.forEach(b => b.style.pointerEvents = 'none');
+      
+      clickedBox.classList.add('opened');
+      
+      if (boxIndex === winningBox) {
+        clickedBox.textContent = '🎉';
         setTimeout(() => {
           revealFinalMessage();
           createConfetti();
         }, 500);
       } else {
-        box.textContent = '😅';
+        clickedBox.textContent = '😅';
         setTimeout(() => {
           stage.innerHTML = `
             <div class="message">
@@ -422,6 +430,8 @@ function pickBox() {
         }, 800);
       }
     });
+    
+    box.dataset.index = i;
     container.appendChild(box);
   }
 }
