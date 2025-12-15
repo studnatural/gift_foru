@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 <title>🎄 Secret Santa Mystery Gift 🎁</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
 <style>
@@ -21,6 +21,7 @@ body {
   justify-content: center;
   padding: 1rem;
   overflow-x: hidden;
+  touch-action: manipulation;
 }
 
 .container {
@@ -112,6 +113,7 @@ h1 {
   left: 0;
   cursor: crosshair;
   border-radius: 15px;
+  touch-action: none;
 }
 
 .scratch-result {
@@ -148,6 +150,8 @@ h1 {
   font-size: 2rem;
   transition: transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .gift-box:hover {
@@ -205,6 +209,8 @@ h1 {
   font-family: 'Luckiest Guy', cursive;
   letter-spacing: 1px;
   margin-top: 1rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover {
@@ -374,7 +380,10 @@ function scratchCard() {
     e.preventDefault();
     isDrawing = true;
   });
-  canvas.addEventListener('touchend', () => isDrawing = false);
+  canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    isDrawing = false;
+  });
   canvas.addEventListener('touchmove', (e) => {
     e.preventDefault();
     if (isDrawing) {
@@ -395,20 +404,26 @@ function pickBox() {
 
   const container = document.getElementById('boxesContainer');
   const winningBox = Math.floor(Math.random() * 9);
+  let boxClicked = false;
   
   for (let i = 0; i < 9; i++) {
     const box = document.createElement('div');
     box.className = 'gift-box';
     box.textContent = '🎁';
+    box.dataset.index = i;
     
     const handleBoxClick = function(e) {
       e.preventDefault();
       e.stopPropagation();
       
-      const clickedBox = e.currentTarget;
+      // Prevent multiple clicks
+      if (boxClicked) return;
+      boxClicked = true;
+      
+      const clickedBox = this;
       const boxIndex = parseInt(clickedBox.dataset.index);
       
-      // Prevent clicking multiple boxes
+      // Disable all boxes
       const allBoxes = document.querySelectorAll('.gift-box');
       allBoxes.forEach(b => {
         b.style.pointerEvents = 'none';
@@ -432,15 +447,24 @@ function pickBox() {
             </div>
             <button class="btn" id="tryAgain">Pick Again</button>
           `;
-          document.getElementById('tryAgain').addEventListener('click', pickBox);
+          const tryAgainBtn = document.getElementById('tryAgain');
+          
+          // Reset flag and call pickBox directly
+          const handleTryAgain = function(e) {
+            e.preventDefault();
+            pickBox();
+          };
+          
+          tryAgainBtn.addEventListener('click', handleTryAgain);
+          tryAgainBtn.addEventListener('touchend', handleTryAgain);
         }, 800);
       }
     };
     
+    // Add both event listeners
     box.addEventListener('click', handleBoxClick);
     box.addEventListener('touchend', handleBoxClick);
     
-    box.dataset.index = i;
     container.appendChild(box);
   }
 }
