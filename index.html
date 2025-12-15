@@ -401,13 +401,19 @@ function pickBox() {
     box.className = 'gift-box';
     box.textContent = '🎁';
     
-    box.addEventListener('click', function(e) {
+    const handleBoxClick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const clickedBox = e.currentTarget;
       const boxIndex = parseInt(clickedBox.dataset.index);
       
       // Prevent clicking multiple boxes
       const allBoxes = document.querySelectorAll('.gift-box');
-      allBoxes.forEach(b => b.style.pointerEvents = 'none');
+      allBoxes.forEach(b => {
+        b.style.pointerEvents = 'none';
+        b.style.cursor = 'default';
+      });
       
       clickedBox.classList.add('opened');
       
@@ -429,7 +435,10 @@ function pickBox() {
           document.getElementById('tryAgain').addEventListener('click', pickBox);
         }, 800);
       }
-    });
+    };
+    
+    box.addEventListener('click', handleBoxClick);
+    box.addEventListener('touchend', handleBoxClick);
     
     box.dataset.index = i;
     container.appendChild(box);
